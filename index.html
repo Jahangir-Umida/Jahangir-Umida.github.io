@@ -30,6 +30,9 @@
         margin: 0;
         background: #fff;
       }
+      .ev-rsvp-opt input:checked + span > span {
+        background: var(--primary, #b4a781) !important;
+      }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
@@ -1433,6 +1436,7 @@
                   "
                 >
                   <span
+                    id="cd-days"
                     style="
                       font-family: var(--font-body);
                       font-size: calc(var(--type-scale, 1) * 24px);
@@ -1471,6 +1475,7 @@
                   "
                 >
                   <span
+                    id="cd-hours"
                     style="
                       font-family: var(--font-body);
                       font-size: calc(var(--type-scale, 1) * 24px);
@@ -1509,6 +1514,7 @@
                   "
                 >
                   <span
+                    id="cd-minutes"
                     style="
                       font-family: var(--font-body);
                       font-size: calc(var(--type-scale, 1) * 24px);
@@ -1547,6 +1553,7 @@
                   "
                 >
                   <span
+                    id="cd-seconds"
                     style="
                       font-family: var(--font-body);
                       font-size: calc(var(--type-scale, 1) * 24px);
@@ -2308,6 +2315,36 @@
             return false;
           });
       }
+
+      // ==== Тойға дейін (тірі санауыш) ====
+      (function () {
+        var elDays = document.getElementById("cd-days");
+        var elHours = document.getElementById("cd-hours");
+        var elMinutes = document.getElementById("cd-minutes");
+        var elSeconds = document.getElementById("cd-seconds");
+        if (!elDays || !elHours || !elMinutes || !elSeconds) return;
+        var target = new Date("2026-10-26T20:00:00+05:00").getTime();
+
+        function pad(n) {
+          return String(n).padStart(2, "0");
+        }
+
+        function tick() {
+          var diff = target - Date.now();
+          if (diff < 0) diff = 0;
+          var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+          var hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+          var minutes = Math.floor((diff / (1000 * 60)) % 60);
+          var seconds = Math.floor((diff / 1000) % 60);
+          elDays.textContent = days;
+          elHours.textContent = pad(hours);
+          elMinutes.textContent = pad(minutes);
+          elSeconds.textContent = pad(seconds);
+        }
+
+        tick();
+        setInterval(tick, 1000);
+      })();
 
       // ==== Анкета (RSVP) ====
       (function () {
